@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %} My Applications {% endblock %}
+
+{% block content %}
+<!-- Heading -->
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark"><i class="bi bi-journal-check me-2 text-primary"></i>My Applications</h2>
+        <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">{{ applications|length }} Total</span>
+    </div>
+
+    <!-- For Loop for Applications -->
+    <div class="row g-4">
+        {% for app in applications %}
+        <div class="col-12">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden hover-shadow transition">
+                <div class="card-body p-4 border">
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <h5 class="fw-bold mb-1 text-primary"><a href="{{ url_for('student.job_view', drive_id=app.drive_id) }}" style="text-decoration: none;">{{ app.drive_details.title }}</a></h5>
+                            <p class="text-muted mb-0"><i class="bi bi-building me-1"></i> {{ app.drive_details.company_details.name }}</p>
+                            <small class="text-muted mt-2 d-block">Applied on: {{ app.applied_at.strftime('%d %b, %Y') }}</small>
+                        </div>
+
+                        <div class="col-md-3 text-md-center mt-3 mt-md-0">
+                            <div class="d-inline-block text-start">
+                                <div class="small text-muted fw-bold text-uppercase">Offered Package</div>
+                                <div class="h5 mb-0 text-success fw-bold">{{ app.drive_details.package }} LPA</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 text-md-center mt-3 mt-md-0">
+                            {% if app.status == 'applied' %}
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-4 py-2 rounded-pill">
+                                    <i class="bi bi-send-check me-1"></i> Under Review
+                                </span>
+                            {% elif app.status == 'shortlisted' %}
+                                <span class="badge bg-warning-subtle text-dark border border-warning-subtle px-4 py-2 rounded-pill">
+                                    <i class="bi bi-person-check me-1"></i> Shortlisted
+                                </span>
+                            {% elif app.status == 'selected' %}
+                                <span class="badge bg-success-subtle text-success border border-success-subtle px-4 py-2 rounded-pill">
+                                    <i class="bi bi-trophy me-1"></i> Selected
+                                </span>
+                            {% elif app.status == 'rejected' %}
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-4 py-2 rounded-pill">
+                                    <i class="bi bi-x-circle me-1"></i> Not Selected
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-2 text-md-end mt-3 mt-md-0">
+                            <a href="{{ url_for('student.job_view', drive_id=app.drive_id) }}" class="btn btn-outline-dark btn-sm rounded-pill px-3">
+                                View Details <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <div class="mb-3">
+                <i class="bi bi-inbox text-muted opacity-25" style="font-size: 5rem;"></i>
+            </div>
+            <h4 class="text-muted">No applications yet</h4>
+            <p class="text-secondary">Start applying to drives to see your progress here!</p>
+            <a href="{{ url_for('student.jobs') }}" class="btn btn-primary rounded-pill px-4 mt-2 shadow-sm">Browse Jobs</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

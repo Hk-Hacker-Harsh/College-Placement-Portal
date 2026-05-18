@@ -1,0 +1,38 @@
+main{
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+.th-short{
+    width:5%;
+}
+
+.th-medium{
+    width:15;
+}
+
+.th-long{
+    width:30%
+}
+
+.th-longer{
+    width:40%
+}
+
+.transition { 
+    transition: all 0.3s ease; 
+}
+
+.hover-shadow:hover {
+    transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; 
+}
+
+.bg-aliceblue { 
+    background-color: #f0f8ff;
+}
+
+.border-transparent {
+    border-left-color: transparent !important;
+}

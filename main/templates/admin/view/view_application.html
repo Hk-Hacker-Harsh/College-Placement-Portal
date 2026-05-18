@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %} View Application {% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.admin_dash') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.application') }}">Applications</a></li>
+                    <li class="breadcrumb-item active">ID: #{{ item.id }}</li>
+                </ol>
+            </nav>
+            <br>
+            <h2 class="fw-bold text-dark"><i class="bi bi-file-earmark-check me-2"></i>Application Details</h2>
+        </div>
+        <a href="{{ url_for('admin.application') }}" class="btn btn-outline-secondary shadow-sm">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-4 mb-4 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <div class="col-md-5 p-4 text-center border-end bg-white">
+                            <div class="mb-3">
+                                <i class="bi bi-person-circle display-4 text-primary"></i>
+                            </div>
+                            <h5 class="fw-bold mb-1">{{ item.student_details.fname }} {{ item.student_details.lname }}</h5>
+                            <p class="text-muted small mb-3">Roll: {{ item.student_details.roll }}</p>
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('admin.view', category='student', id=item.student_id) }}" class="btn btn-sm btn-outline-primary">
+                                    Full Student Profile
+                                </a>
+                                <a href="{{ item.student_details.resume }}" target="_blank" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-file-pdf"></i> Download Resume
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 d-none d-md-flex align-items-center justify-content-center bg-light border-start border-end">
+                            <i class="bi bi-arrow-right-circle h1 text-secondary opacity-50"></i>
+                        </div>
+
+                        <div class="col-md-5 p-4 text-center bg-white">
+                            <div class="mb-3">
+                                <i class="bi bi-briefcase display-4 text-success"></i>
+                            </div>
+                            <h5 class="fw-bold mb-1">{{ item.drive_details.title }}</h5>
+                            <p class="text-muted small mb-3">at {{ item.drive_details.company_details.name }}</p>
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('admin.view', category='drive', id=item.drive_id) }}" class="btn btn-sm btn-outline-success">
+                                    Full Job Details
+                                </a>
+                                <div class="badge bg-light text-dark border p-2">
+                                    Package: {{ item.drive_details.package }} LPA
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <h6 class="fw-bold text-uppercase small text-muted mb-3">Submission Details</h6>
+                    <div class="row text-center">
+                        <div class="col-6 border-end">
+                            <p class="text-muted small mb-0">Applied On</p>
+                            <p class="fw-bold">{{ item.applied_at.strftime('%d %b %Y, %I:%M %p') }}</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-muted small mb-0">Current Status</p>
+                            <p class="fw-bold text-uppercase 
+                                {% if item.status == 'selected' %}text-success
+                                {% elif item.status == 'rejected' %}text-danger
+                                {% else %}text-primary{% endif %}">
+                                {{ item.status }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-header bg-dark text-white fw-bold py-3">Update Application Status</div>
+                <div class="card-body">
+                    <form method="POST">
+                        <label class="form-label small fw-bold">Selection Stage</label>
+                        <select name="status" class="form-select mb-3">
+                            <option value="applied" {% if item.status == 'applied' %}selected{% endif %}>Applied / Under Review</option>
+                            <option value="shortlisted" {% if item.status == 'shortlisted' %}selected{% endif %}>Shortlisted for Interview</option>
+                            <option value="selected" {% if item.status == 'selected' %}selected{% endif %}>Selected / Hired</option>
+                            <option value="rejected" {% if item.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary w-100 mb-2">Save Decision</button>
+                    </form>
+                    <p class="text-muted small text-center mt-2">
+                        This update will be visible to both the student and the company.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

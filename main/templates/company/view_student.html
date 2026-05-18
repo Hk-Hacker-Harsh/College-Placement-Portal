@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %} View Student Details {% endblock %}
+
+<!-- View Student Page -->
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url_for('company.company_dash') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('company.view_applicants', drive_id=app.drive_id) }}">All Applications</a></li>
+                    <li class="breadcrumb-item active">{{ item.fname }} {{ item.lname }}</li>
+                </ol>
+            </nav>
+            <br>
+            <h2 class="fw-bold text-dark"><i class="bi bi-person-badge me-2"></i>Student Profile</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h3 class="fw-bold mb-0">{{ item.fname }} {{ item.lname }}</h3>
+                            <p class="text-muted mb-2">{{ item.degree_field }} | Batch of {{ item.batch }}</p>
+                            <br>
+                            <span class="fw-bold small">Student Status : </span>
+                            <span class="badge {% if item.status == 'approved' %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ item.status | capitalize }}
+                            </span>
+                            <br>
+                            <span class="fw-bold small">Application Status : </span>
+                            <span class="badge {% if app.status == 'rejected' %}bg-danger{% else %}bg-success{% endif %}">
+                                {{ app.status | capitalize }}
+                            </span>
+                        </div>
+                        <div class="text-end">
+                            <div class="h4 mb-0 text-primary fw-bold">{{ item.cgpa }}</div>
+                            <small class="text-muted text-uppercase fw-bold">Current CGPA</small>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6 col-md-4">
+                            <label class="text-muted small d-block">ROLL NUMBER</label>
+                            <span class="fw-bold">{{ item.roll }}</span>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <label class="text-muted small d-block">GRADUATION</label>
+                            <span class="fw-bold">{{ item.graduation_year }}</span>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <label class="text-muted small d-block">PHONE</label>
+                            <span class="fw-bold">{{ item.phone or 'N/A' }}</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="text-muted small d-block">EMAIL</label>
+                        <span class="fw-bold">{{ item.email or 'N/A' }}</span>
+                    </div>
+                    
+                    <hr>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-uppercase small text-muted mb-3">About / Bio</h6>
+                        <p class="text-secondary">{{ item.bio or 'No bio provided.' }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-uppercase small text-muted mb-3">Technical Skills</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% if item.skills %}
+                                {% for skill in item.skills.split(',') %}
+                                    <span class="badge bg-light text-dark border">{{ skill.strip() }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-muted small">No skills listed</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0 p-4">
+                    <h6 class="fw-bold text-uppercase small text-muted mb-3">Professional Links</h6>
+                    <div class="d-flex gap-3">
+                        {% if item.resume %}
+                        <a href="{{ item.resume }}" target="_blank" class="btn btn-danger btn-sm">
+                            <i class="bi bi-file-earmark-pdf"></i> View Resume
+                        </a>
+                        {% endif %}
+
+                        {% if item.github %}
+                        <a href="{{ item.github }}" target="_blank" class="btn btn-dark btn-sm">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                        {% endif %}
+
+                        {% if item.linkedin %}
+                        <a href="{{ item.linkedin }}" target="_blank" class="btn btn-primary btn-sm">
+                            <i class="bi bi-linkedin"></i> LinkedIn
+                        </a>
+                        {% endif %}
+
+                        {% if item.portfolio %}
+                        <a href="{{ item.portfolio }}" target="_blank" class="btn btn-info btn-sm text-white">
+                            <i class="bi bi-globe"></i> Portfolio
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-2 rounded-4 mb-4">
+                <div class="card-header bg-dark text-white fw-bold py-3 rounded">Account Management</div>
+                <div class="card-body">
+                    <!-- Update Status -->
+                    <form action="{{ url_for('company.update_status', app_id=app.id) }}" method="POST" class="d-flex gap-2 justify-content-end">
+                        <select name="new_status" class="form-select form-select-sm rounded-pill w-auto">
+                            <option value="applied" {% if app.status == 'applied' %}selected{% endif %}>Applied</option>
+                            <option value="shortlisted" {% if app.status == 'shortlisted' %}selected{% endif %}>Shortlisted</option>
+                            <option value="selected" {% if app.status == 'selected' %}selected{% endif %}>Selected</option>
+                            <option value="rejected" {% if app.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-dark rounded-circle">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

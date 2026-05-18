@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %} Notifications {% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold mb-0"><i class="bi bi-bell-fill text-primary me-2"></i>Notifications</h2>
+                    <p class="text-muted small">Stay updated on your application status and drive alerts</p>
+                </div>
+                {% if notifications %}
+                <form action="{{ url_for('student.mark_as_read') }}" method="POST">
+                    <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                        Mark all as read
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="list-group list-group-flush">
+                    {% for n in notifications | sort(attribute='created_at', reverse=True) %}
+                    <div class="list-group-item list-group-item-action py-3 border-start border-4 {% if not n.is_read %}border-primary bg-aliceblue{% else %}border-transparent{% endif %}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="me-3">
+                                <div class="d-flex align-items-center mb-1">
+                                    {% if 'approved' in n.message or 'Shortlisted' in n.message or 'Selected' in n.message %}
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    {% elif 'Rejected' in n.message %}
+                                        <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                                    {% else %}
+                                        <i class="bi bi-info-circle-fill text-primary me-2"></i>
+                                    {% endif %}
+                                    <span class="fw-bold {% if not n.is_read %}text-dark{% else %}text-secondary{% endif %}">
+                                        Application Update
+                                    </span>
+                                </div>
+                                <p class="mb-0 {{ 'text-dark fw-medium' if not n.is_read else 'text-muted' }}">
+                                    {{ n.message }}
+                                </p>
+                                <small class="text-muted mt-2 d-block">
+                                    <i class="bi bi-clock me-1"></i>{{ n.created_at }}
+                                </small>
+                            </div>
+                            
+                            {% if not n.is_read %}
+                            <span class="badge bg-primary rounded-pill p-1">
+                                <span class="visually-hidden">New</span>
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-bell-slash display-1 text-muted opacity-25"></i>
+                        <p class="mt-3 text-muted">You're all caught up! No notifications yet.</p>
+                        <a href="{{ url_for('student.jobs') }}" class="btn btn-primary btn-sm mt-2 rounded-pill px-4">Browse Jobs</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

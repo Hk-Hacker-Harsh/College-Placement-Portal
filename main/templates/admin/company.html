@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %} Manage Company {% endblock %}
+
+{% block content %}
+<br>
+<div class="d-flex align-items-center mb-4" style="justify-content: center;">
+    <h3 class="fw-bold"><u>Manage Companies</u></h3>
+</div>
+
+<!-- Used Bootstrap JS for this -->
+<!-- Tabs -->
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist" style="justify-content: center;">
+    
+    <button class="nav-link active" id="nav-pending-tab" data-bs-toggle="tab" data-bs-target="#nav-pending" type="button" role="tab" aria-controls="nav-pending" aria-selected="true">Pending for Approval</button>
+
+    <button class="nav-link" id="nav-approved-tab" data-bs-toggle="tab" data-bs-target="#nav-approved" type="button" role="tab" aria-controls="nav-approved" aria-selected="false">Approved</button>
+
+    <button class="nav-link" id="nav-rejected-or-blacklisted-tab" data-bs-toggle="tab" data-bs-target="#nav-rejected-or-blacklisted" type="button" role="tab" aria-controls="nav-rejected-or-blacklisted" aria-selected="false">Rejected/Blacklisted</button>
+    
+  </div>
+</nav>
+
+<div class="tab-content" id="nav-tabContent">
+
+  <div class="tab-pane fade show active" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab" tabindex="0">
+    <!-- Table for Companies Pending Review -->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="th-short">ID</th>
+          <th scope="col" class="th-medium">Name</th>
+          <th scope="col" class="th-medium">Website</th>
+          <th scope="col" class="th-long">Description</th>
+          <th scope="col" class="th-long">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop Table Data -->
+        {% for i in companies_pending %}
+        <tr>
+          <th scope="row">{{ i.id }}</th>
+          <td>{{ i.name }}</td>
+          <td><a href="{{ i.website }}" style="color: black; text-decoration: none;">{{ i.website }}</a></td>
+          <td>{{ i.description | truncate(50, True) }}</td>
+          <td>
+            <!-- Button with type Submit in form to send POST Request to Python Route -->
+            <form action="{{ url_for('admin.view', id=i.id, category='company') }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-primary">Show Profile</button>
+            </form>
+
+            <form action="{{ url_for('admin.approve_company', id=i.id) }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-success">Approve</button>
+            </form>
+
+            <form action="{{ url_for('admin.reject_company', id=i.id) }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-danger">Reject</button>
+            </form>
+            
+            <form action="{{ url_for('admin.delete_company', id=i.id) }}" class="d-inline" method="POST">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="tab-pane fade" id="nav-approved" role="tabpanel" aria-labelledby="nav-approved-tab" tabindex="0">
+    <!-- Table for Approved Companies-->
+     <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="th-short">ID</th>
+          <th scope="col" class="th-medium">Name</th>
+          <th scope="col" class="th-medium">Website</th>
+          <th scope="col" class="th-long">Description</th>
+          <th scope="col" class="th-long">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop Table Data -->
+        {% for i in companies_approved %}
+        <tr>
+          <th scope="row">{{ i.id }}</th>
+          <td>{{ i.name }}</td>
+          <td><a href="{{ i.website }}" style="color: black; text-decoration: none;">{{ i.website }}</a></td>
+          <td>{{ i.description | truncate(50, True) }}</td>
+          <td>
+            <!-- Button with type Submit in form to send POST Request to Python Route -->
+            <form action="{{ url_for('admin.view', id=i.id, category='company') }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-primary">Show Profile</button>
+            </form>
+            
+            <form action="{{ url_for('admin.delete_company', id=i.id) }}" class="d-inline" method="POST">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+
+            <form action="{{ url_for('admin.blacklist_company', id=i.id) }}" class="d-inline" method="POST">
+            <button type="submit" class="btn btn-danger">Blacklist</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tab-pane fade" id="nav-rejected-or-blacklisted" role="tabpanel" aria-labelledby="nav-rejected-or-blacklisted-tab" tabindex="0">
+    <!-- Table for Rejected or Blacklisted Companies-->
+     <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="th-short">ID</th>
+          <th scope="col" class="th-medium">Name</th>
+          <th scope="col" class="th-medium">Website</th>
+          <th scope="col" class="th-long">Description</th>
+          <th scope="col" class="th-long">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop Table Data -->
+        {% for i in company_rejected_or_blacklisted %}
+        <tr>
+          <th scope="row">{{ i.id }}</th>
+          <td>{{ i.name }} - {{ 'Rejected' if i.status == 'rejected' else 'Blacklisted' }}</td>
+          <td><a href="{{ i.website }}" style="color: black; text-decoration: none;">{{ i.website }}</a></td>
+          <td>{{ i.description | truncate(50, True) }}</td>
+          <td>
+            <!-- Button with type Submit in form to send POST Request to Python Route -->
+            <form action="{{ url_for('admin.view', id=i.id, category='company') }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-primary">Show Profile</button>
+            </form>
+
+            <form action="{{ url_for('admin.approve_company', id=i.id) }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-success">Approve Again</button>
+            </form>
+            
+            <form action="{{ url_for('admin.delete_company', id=i.id) }}" class="d-inline" method="POST">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

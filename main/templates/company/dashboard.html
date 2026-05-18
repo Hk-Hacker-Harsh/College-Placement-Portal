@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %} {{ company.name }} {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Greet -->
+    <div class="mb-4">
+        <h2 class="fw-bold">Welcome back, <span class="text-primary">{{ company.name }}</span>!</h2>
+        <p class="text-muted">Here is what's happening with your recruitment drives today.</p>
+    </div>
+
+    <!-- Cards -->
+    <div class="row g-3 mb-5">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm bg-primary text-white p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-uppercase fw-bold opacity-75">Total Drives</small>
+                        <h2 class="mb-0 fw-bold">{{ total_drives }}</h2>
+                    </div>
+                    <i class="bi bi-megaphone fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm bg-success text-white p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-uppercase fw-bold opacity-75">Running Drives</small>
+                        <h2 class="mb-0 fw-bold">{{ running_drives }}</h2>
+                    </div>
+                    <i class="bi bi-play-circle fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm bg-info text-white p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-uppercase fw-bold opacity-75">Total Applications</small>
+                        <h2 class="mb-0 fw-bold">{{ total_apps }}</h2>
+                    </div>
+                    <i class="bi bi-people fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Latest Drives Table -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">Latest Job Postings</h4>
+        <a href="{{ url_for('company.drives') }}" class="btn btn-sm btn-outline-primary rounded-pill">View All</a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Role Title</th>
+                        <th>Status</th>
+                        <th>Deadline</th>
+                        <th>Applications</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for drive in latest_drives %}
+                    <tr>
+                        <td class="ps-4 fw-bold text-dark">{{ drive.title }}</td>
+                        <td>
+                            {% if drive.status == 'approved' %}
+                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3">Active</span>
+                            {% elif drive.status == 'pending' %}
+                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-3">Pending</span>
+                            {% else %}
+                                <span class="badge bg-secondary rounded-pill px-3">Closed</span>
+                            {% endif %}
+                        </td>
+                        <td class="small text-muted">{{ drive.deadline.strftime('%d %b, %Y') }}</td>
+                        <td class="fw-bold text-primary">{{ drive.job_application|length }}</td>
+                        <td class="text-center">
+                            <a href="{{ url_for('company.manage_drive', drive_id=drive.id) }}" class="btn btn-sm btn-dark rounded-pill px-3">
+                                Manage
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted">No drives posted yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<br>
+<!-- Chart.js -->
+<hr>
+<br>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">Statistics</h3>
+</div>
+
+<div class="card shadow-sm p-4">
+    <h5 class="fw-bold text-center">Applications per Job Drive</h5>
+    <div style="height: 400px;">
+        <canvas id="Company_Chart"></canvas>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        const ctx = document.getElementById('Company_Chart');
+        new Chart(ctx, {
+            type: 'bar', 
+            data: {
+                labels: {{ labels | safe }},
+                datasets: [{
+                    label: 'Number of Applicants',
+                    data: {{ values | safe }},
+                    backgroundColor: '#007bff',
+                    borderColor: '#0056b3',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { beginAtZero: true, ticks: { stepSize: 1 } }
+                }
+            }
+        });
+    };
+</script>
+{% endblock %}

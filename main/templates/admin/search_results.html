@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %} Search Results {% endblock %}
+
+{% block content %}
+
+    <br>
+    <div class="d-flex align-items-center mb-4" style="justify-content: center;">
+    <h3 class="fw-bold"><u>Search Results for "{{ q }}" in {{ category | capitalize }}</u></h3>
+    </div>
+
+    {% if not results %}
+        <div class="alert alert-info">No records found.</div>
+    {% else %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name/Title</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in results %}
+                <tr>
+                    <td>{% if category=='company' %}{{item.name}}{% elif category=='drive' %}{{item.title}}{% else %}{{ item.fname }} {{ item.lname}}{% endif %}</td>
+                    <td>{{ item.status | capitalize }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.view', category=category, id=item.id) }}" class="btn btn-sm btn-info">View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

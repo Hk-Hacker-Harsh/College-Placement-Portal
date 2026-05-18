@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %} Onboarding Page {% endblock %}
+
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
+                <div class="card-body p-4">
+                    <h2 class="text-center mb-4">Finalize Your Profile</h2>
+                    <p class="text-center text-muted">Tell us a bit more to get started.</p>
+                    <hr>
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {% if current_user.role == 'student' %}
+                            <!-- Name -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" name="fname" class="form-control" minlength="2" placeholder="John" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" name="lname" class="form-control" placeholder="Doe">
+                                </div>
+                            </div>
+                            <!-- Contact -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Contact Number</label>
+                                    <input type="tel" name="phone" class="form-control" pattern="[0-9]{10}" title="Please enter a 10-digit phone number" placeholder="e.g. +91 XXXXX XXXXX" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="text" name="email" class="form-control" required>
+                                </div>
+                            </div>
+                            <!-- Roll and Batch -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Roll Number</label>
+                                    <input type="text" name="roll" class="form-control" placeholder="e.g. 25f2000..." required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Batch</label>
+                                    <input type="text" name="batch" class="form-control" placeholder="Year-Term" required>
+                                </div>
+                            <!-- CGPA & Graduate -->
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">CGPA</label>
+                                    <input type="number" step="0.01" name="cgpa" min="0" max="10" class="form-control" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Expected Year of Graduation</label>
+                                    <input type="number" name="graduation" placeholder="20XX" class="form-control" required>
+                                </div>
+                            </div>
+                            <!-- Degree Field -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Degree Field</label>
+                                <input type="text" name="degree" class="form-control" placeholder="BS in Data Science" required>
+                            </div>
+
+                            <!-- Links -->
+                            <!-- Resume -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Resume URL (Drive/Link) Or Upload Resume</label>
+                                    <input type="url" name="resume_url" class="form-control" placeholder="https://drive.google.com/...">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Upload PDF Resume</label>
+                                    <input type="file" name="resume_file" class="form-control" accept=".pdf">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Github (Optional)</label>
+                                <input type="url" name="github" class="form-control" placeholder="https://...">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Linkedin (Optional)</label>
+                                <input type="url" name="linkedin" class="form-control" placeholder="https://...">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Portfolio Site (Optional)</label>
+                                <input type="url" name="portfolio" class="form-control" placeholder="https://...">
+                            </div>
+                            <!-- Text Boxes : Bio and Skills(Comma Separated) -->
+                            <div class="mb-3">
+                                <label class="form-label">Bio</label>
+                                <input type="text" name="bio" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Skills (Comma Separated)</label>
+                                <input type="text" name="skills" class="form-control" placeholder="Python, PostgreSQL, Java, Rust, Go..." required>
+                            </div>
+
+
+                        <!-- Company Onboarding Details -->
+                        {% elif current_user.role == 'company' %}
+                            <!-- Comany Basic Details -->
+                            <div class="mb-3">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" name="name" minlength="2" class="form-control" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Company Website</label>
+                                    <input type="url" name="website" class="form-control" placeholder="https://..." required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Industry</label>
+                                    <input type="text" name="industry" class="form-control" placeholder="e.g. Software, Finance" required>
+                                </div>
+                            </div>
+
+                            <!-- Contact -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">HR Contact Number</label>
+                                    <input type="text" name="contact" pattern="[0-9]{10}" title="Please enter a 10-digit phone number" class="form-control" placeholder="e.g. +91 XXXXX XXXXX" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Contact Email</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <!-- Extra -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Employee Count (Optional)</label>
+                                    <input type="text" name="count" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" name="location" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <!-- Company Description -->
+                            <div class="mb-3">
+                                <label class="form-label">Short Description</label>
+                                <input type="text" name="short-desc" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <input type="text" name="desc" class="form-control" required>
+                            </div>
+
+                            <!-- Links & Docs -->
+                            <!-- Logo -->
+                            <div id="branding" class="mb-5">
+                                <h4 class="fw-bold mb-3 border-bottom pb-2">Branding</h4>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Logo URL OR Upload Logo</label>
+                                        <input type="url" name="logo_url" class="form-control">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Upload Logo File</label>
+                                        <input type="file" name="logo_file" class="form-control" accept="image/*">
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Finish & Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

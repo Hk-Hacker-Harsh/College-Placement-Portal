@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %} Manage Company {% endblock %}
+
+{% block content %}
+<br>
+<div class="d-flex align-items-center mb-4" style="justify-content: center;">
+    <h3 class="fw-bold"><u>Manage Applications</u></h3>
+</div>
+
+<!-- Used Bootstrap JS for this -->
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist" style="justify-content: center;">
+    <button class="nav-link active" id="nav-all-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="nav-all" aria-selected="true">All</button>
+
+    <button class="nav-link" id="nav-applied-tab" data-bs-toggle="tab" data-bs-target="#nav-applied" type="button" role="tab" aria-controls="nav-applied" aria-selected="false">Applied</button>
+
+    <button class="nav-link" id="nav-shortlisted-tab" data-bs-toggle="tab" data-bs-target="#nav-shortlisted" type="button" role="tab" aria-controls="nav-shortlisted" aria-selected="false">Shortlisted</button>
+    
+    <button class="nav-link" id="nav-selected-tab" data-bs-toggle="tab" data-bs-target="#nav-selected" type="button" role="tab" aria-controls="nav-selected" aria-selected="false">Selected</button>
+    
+    <button class="nav-link" id="nav-rejected-tab" data-bs-toggle="tab" data-bs-target="#nav-rejected" type="button" role="tab" aria-controls="nav-rejected" aria-selected="false">Rejected</button>
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab" tabindex="0">
+    <!-- Table for All Applications-->
+     <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="th-short">ID</th>
+          <th scope="col" class="th-medium">Student</th>
+          <th scope="col" class="th-medium">Company</th>
+          <th scope="col" class="th-medium">Job Title</th>
+          <th scope="col" class="th-medium">Applied On</th>
+          <th scope="col" class="th-medium">Status</th>
+          <th scope="col" class="th-medium">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop Table Data -->
+        {% for i in app_all %}
+        <tr>
+          <th scope="row">{{ i.id }}</th>
+          <td>{{ i.student_details.fname }} {{ i.student_details.lname }}</td>
+          <td>{{ i.drive_details.company_details.name }}</td>
+          <td>{{ i.drive_details.title | truncate(50, True) }}</a></td>
+          <td>{{ i.applied_at }}</td>
+          <td>{{ i.status }}</td>
+          <td>
+            <!-- Button with type Submit in form to send POST Request to Python Route -->
+            <form action="{{ url_for('admin.view', id=i.id, category='application') }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-primary">Show Details</button>
+            </form>
+
+            <form action="{{ url_for('admin.delete_app', id=i.id) }}" class="d-inline" method="POST">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tab-pane fade show active" id="nav-applied" role="tabpanel" aria-labelledby="nav-applied-tab" tabindex="0">
+    <!-- Table for applied Applications-->
+     <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="th-short">ID</th>
+          <th scope="col" class="th-medium">Student</th>
+          <th scope="col" class="th-medium">Company</th>
+          <th scope="col" class="th-medium">Job Title</th>
+          <th scope="col" class="th-medium">Applied On</th>
+          <th scope="col" class="th-long">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop Table Data -->
+        {% for i in app_applied %}
+        <tr>
+          <th scope="row">{{ i.id }}</th>
+          <td>{{ i.student_details.fname }} {{ i.student_details.lname }}</td>
+          <td>{{ i.drive_details.company_details.name }}</td>
+          <td>{{ i.drive_details.title | truncate(50, True) }}</a></td>
+          <td>{{ i.applied_at }}</td>
+          <td>
+            <!-- Button with type Submit in form to send POST Request to Python Route -->
+            <form action="{{ url_for('admin.view', id=i.id, category='application') }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-primary">Show Details</button>
+            </form>
+
+            <form action="{{ url_for('admin.delete_app', id=i.id) }}" class="d-inline" method="POST">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="tab-pane fade" id="nav-shortlisted" role="tabpanel" aria-labelledby="nav-shortlisted-tab" tabindex="0">
+    <!-- Table for Shortlisted Applications-->
+     <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="th-short">ID</th>
+          <th scope="col" class="th-medium">Student</th>
+          <th scope="col" class="th-medium">Company</th>
+          <th scope="col" class="th-medium">Job Title</th>
+          <th scope="col" class="th-medium">Applied On</th>
+          <th scope="col" class="th-long">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop Table Data -->
+        {% for i in app_shortlisted %}
+        <tr>
+          <th scope="row">{{ i.id }}</th>
+          <td>{{ i.student_details.fname }} {{ i.student_details.lname }}</td>
+          <td>{{ i.drive_details.company_details.name }}</td>
+          <td>{{ i.drive_details.title | truncate(50, True) }}</a></td>
+          <td>{{ i.applied_at }}</td>
+          <td>
+            <!-- Button with type Submit in form to send POST Request to Python Route -->
+            <form action="{{ url_for('admin.view', id=i.id, category='application') }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-primary">Show Details</button>
+            </form>
+
+            <form action="{{ url_for('admin.delete_app', id=i.id) }}" class="d-inline" method="POST">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="tab-pane fade" id="nav-selected" role="tabpanel" aria-labelledby="nav-selected-tab" tabindex="0">
+    <!-- Table for selected Applications-->
+     <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="th-short">ID</th>
+          <th scope="col" class="th-medium">Student</th>
+          <th scope="col" class="th-medium">Company</th>
+          <th scope="col" class="th-medium">Job Title</th>
+          <th scope="col" class="th-medium">Applied On</th>
+          <th scope="col" class="th-long">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop Table Data -->
+        {% for i in app_selected %}
+        <tr>
+          <th scope="row">{{ i.id }}</th>
+          <td>{{ i.student_details.fname }} {{ i.student_details.lname }}</td>
+          <td>{{ i.drive_details.company_details.name }}</td>
+          <td>{{ i.drive_details.title | truncate(50, True) }}</a></td>
+          <td>{{ i.applied_at }}</td>
+          <td>
+            <!-- Button with type Submit in form to send POST Request to Python Route -->
+            <form action="{{ url_for('admin.view', id=i.id, category='application') }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-primary">Show Details</button>
+            </form>
+
+            <form action="{{ url_for('admin.delete_app', id=i.id) }}" class="d-inline" method="POST">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="tab-pane fade" id="nav-rejected" role="tabpanel" aria-labelledby="nav-rejected-tab" tabindex="0">
+    <!-- Table for Rejected Applications-->
+     <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="th-short">ID</th>
+          <th scope="col" class="th-medium">Student</th>
+          <th scope="col" class="th-medium">Company</th>
+          <th scope="col" class="th-medium">Job Title</th>
+          <th scope="col" class="th-medium">Applied On</th>
+          <th scope="col" class="th-long">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop Table Data -->
+        {% for i in app_rejected %}
+        <tr>
+          <th scope="row">{{ i.id }}</th>
+          <td>{{ i.student_details.fname }} {{ i.student_details.lname }}</td>
+          <td>{{ i.drive_details.company_details.name }}</td>
+          <td>{{ i.drive_details.title | truncate(50, True) }}</a></td>
+          <td>{{ i.applied_at }}</td>
+          <td>
+            <!-- Button with type Submit in form to send POST Request to Python Route -->
+            <form action="{{ url_for('admin.view', id=i.id, category='application') }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-primary">Show Details</button>
+            </form>
+
+            <form action="{{ url_for('admin.delete_app', id=i.id) }}" class="d-inline" method="POST">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

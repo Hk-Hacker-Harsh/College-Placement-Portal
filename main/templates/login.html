@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %} Login - Portal {% endblock %}
+
+{% block content %}
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card shadow-lg border-0 mt-5" style="width: 100%; max-width: 400px; border-radius: 15px;">
+            <div class="card-body p-5">
+                <h2 class="text-center fw-bold mb-4">Welcome Back</h2>
+                <p class="text-center text-muted mb-4" style="background-color: #8ab6fc;">Please enter your credentials</p>
+
+                <form method="POST">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="user" name="user" placeholder="Username" required>
+                        <label for="user">Username</label>
+                    </div>
+
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="pass" name="pass" placeholder="Password" required>
+                        <label for="pass">Password</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm" style="border-radius: 10px;">
+                        Login
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="small text-muted">New here? <a href="{{ url_for('auth.register') }}" class="text-decoration-none">Create an account</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %} Manage Students {% endblock %}
+
+{% block content %}
+<br>
+<div class="d-flex align-items-center mb-4" style="justify-content: center;">
+    <h3 class="fw-bold"><u>Manage Students</u></h3>
+</div>
+
+<!-- Used Bootstrap JS for this -->
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist" style="justify-content: center;">
+    <button class="nav-link active" id="nav-approved-tab" data-bs-toggle="tab" data-bs-target="#nav-approved" type="button" role="tab" aria-controls="nav-approved" aria-selected="true">Approved</button>
+
+    <button class="nav-link" id="nav-blacklisted-tab" data-bs-toggle="tab" data-bs-target="#nav-blacklisted" type="button" role="tab" aria-controls="nav-blacklisted" aria-selected="false">Blacklisted</button>
+  </div>
+</nav>
+
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-approved" role="tabpanel" aria-labelledby="nav-approved-tab" tabindex="0">
+    <!-- Table for Approved Students-->
+     <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="th-short">ID</th>
+          <th scope="col" class="th-medium">Name</th>
+          <th scope="col" class="th-medium">Roll No.</th>
+          <th scope="col" class="th-long">Skills</th>
+          <th scope="col" class="th-long">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop Table Data -->
+        {% for i in student_approved %}
+        <tr>
+          <th scope="row">{{ i.id }}</th>
+          <td>{{ i.fname }} {{ i.lname }}</td>
+          <td>{{ i.roll }}</a></td>
+          <td>{{ i.skills | truncate(50, True) }}</td>
+          <td>
+            <!-- Button with type Submit in form to send POST Request to Python Route -->
+            <form action="{{ url_for('admin.view', id=i.id, category='student') }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-primary">Show Profile</button>
+            </form>
+
+            <form action="{{ url_for('admin.blacklist_student', id=i.id) }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-danger">BlackList</button>
+            </form>
+            
+            <form action="{{ url_for('admin.delete_student', id=i.id) }}" class="d-inline" method="POST">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="tab-pane fade" id="nav-blacklisted" role="tabpanel" aria-labelledby="nav-blacklisted-tab" tabindex="0">
+    <!-- Table for Blacklisted Students-->
+     <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="th-short">ID</th>
+          <th scope="col" class="th-medium">Name</th>
+          <th scope="col" class="th-medium">Roll No.</th>
+          <th scope="col" class="th-long">Skills</th>
+          <th scope="col" class="th-long">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop Table Data -->
+        {% for i in student_blacklisted %}
+        <tr>
+          <th scope="row">{{ i.id }}</th>
+          <td>{{ i.fname }} {{ i.lname }}</td>
+          <td>{{ i.roll }}</a></td>
+          <td>{{ i.skills | truncate(50, True) }}</td>
+          <td>
+            <!-- Button with type Submit in form to send POST Request to Python Route -->
+            <form action="{{ url_for('admin.view', id=i.id, category='company') }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-primary">Show Profile</button>
+            </form>
+
+            <form action="{{ url_for('admin.approve_student', id=i.id) }}" class="d-inline" method="POST">
+              <button type="submit" class="btn btn-success">Approve</button>
+            </form>
+            
+            <form action="{{ url_for('admin.delete_student', id=i.id) }}" class="d-inline" method="POST">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

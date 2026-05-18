@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Placement Portal {% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Bootstrap Css And JS Added -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+
+    <!-- JS for chart.js -->
+    <script src="../static/js/chart.js"></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Nav Bar added using Bootstrap -->
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">IIT Madras</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Search Bar -->
+            {% if current_user.is_authenticated %}
+                {% if current_user.role == 'admin' %}
+                    <div style="justify-content: center; margin-left: 35px; width: 40%;">
+                        <form action="{{ url_for('admin.admin_search') }}" method="GET" class="d-flex">
+                            <select name="type" class="form-select me-2" style="width: auto;">
+                                <option value="company">Companies</option>
+                                <option value="student">Students</option>
+                                <option value="drive">Drives</option>
+                            </select>
+                            <input type="text" name="q" class="form-control me-2" placeholder="Search...">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+
+            <div class="collapse navbar-collapse" id="navbarNavDropdown" style="justify-content: right;">
+            <ul class="navbar-nav">
+
+                <!-- Different Links as per User Type -->
+                {% if current_user.is_authenticated %}
+                    <!-- Student -->
+                    {% if current_user.role == 'student' %}
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('student.student_dash') }}">Dashboard</a>
+                        </li>
+
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('student.applications') }}">My Applications</a>
+                        </li>
+
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('student.jobs') }}">Jobs</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('student.profile') }}">Profile</a>
+                        </li>
+
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('student.notifications') }}">Notifications</a>
+                        </li>
+
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}" style="color: red;">Logout</a>
+                        </li>
+                    <!-- Company -->
+                    {% elif current_user.role == 'company' %}
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('company.company_dash') }}">Dashboard</a>
+                        </li>
+
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('company.drives') }}">Drives</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('company.profile') }}">Profile</a>
+                        </li>
+
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}" style="color: red;">Logout</a>
+                        </li>
+                    
+                    <!-- Admin -->
+                    {% elif current_user.role == 'admin' %}
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.admin_dash') }}">Dashboard</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.company') }}">Company</a>
+                        </li>
+
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.student') }}">Student</a>
+
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.application') }}">Application</a>
+                        </li>
+
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.drive') }}">Drive</a>
+                        </li>
+
+                        <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}" style="color: red;">Logout</a>
+                        </li>
+
+                    {% endif %}
+
+                <!-- Unauthorized User -->
+                {% else %}
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                    </li>
+
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+                    </li>
+                
+                {% endif %}
+            </ul>
+            </div>
+        </div>
+        </nav>
+    </header>
+
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="flex-grow-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <div ></div>
+
+    <footer class="py-3 border-top bg-light">
+        <div class="container text-center">
+            <span class="text-muted">© 2026 IITM Placement Portal | Harsh Khandal</span>
+        </div>
+    </footer>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/popper.min.js"></script>
+</body>
+</html>

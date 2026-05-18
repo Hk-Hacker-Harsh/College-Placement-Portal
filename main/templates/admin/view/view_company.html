@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %} View Company Details {% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.admin_dash') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.company') }}">Company</a></li>
+                    <li class="breadcrumb-item active">{{ item.name }}</li>
+                </ol>
+            </nav>
+            <br>
+            <h2 class="fw-bold text-dark"><i class="bi bi-building me-2"></i>Company Profile</h2>
+        </div>
+        <a href="{{ url_for('admin.company') }}" class="btn btn-outline-secondary shadow-sm">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ item.logo }}" 
+                             alt="Logo" class="rounded-circle border me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                        <div>
+                            <h3 class="mb-0 fw-bold">{{ item.name }}</h3>
+                            <span class="badge {% if item.status == 'approved' %}bg-success{% elif item.status == 'pending' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+                                {{ item.status | capitalize }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <p class="text-muted small mb-1">INDUSTRY</p>
+                            <p class="fw-bold">{{ item.industry or 'N/A' }}</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="text-muted small mb-1">HEADQUARTERS</p>
+                            <p class="fw-bold">{{ item.location or 'Not Specified' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold">Short Description</h5>
+                        <p class="text-secondary italic">"{{ item.short_desc or 'No short description provided.' }}"</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold">Full About</h5>
+                        <p class="text-secondary">{{ item.description or 'No detailed description available.' }}</p>
+                    </div>
+
+                    <div class="row p-3 bg-light rounded-3">
+                        <div class="col-md-4">
+                            <strong>Team Size:</strong><br>
+                            {{ item.employees_count or 'Unknown' }} Employees
+                        </div>
+                        <div class="col-md-8">
+                            <strong>Website:</strong><br>
+                            <a href="{{ item.website }}" target="_blank" class="text-decoration-none">
+                                {{ item.website }} <i class="bi bi-box-arrow-up-right small"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Primary Contact (HR)</h5>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <p class="mb-1"><strong>Name:</strong> {{ item.hr_contact }}</p>
+                            <p class="mb-0"><strong>Email:</strong> {{ item.email }}</p>
+                        </div>
+                        <div class="text-end">
+                            <a href="mailto:{{ item.email }}" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-envelope"></i> Send Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card-header bg-dark text-white fw-bold py-3">Review Action</div>
+                <div class="card-body">
+                    <form method="POST">
+                        <label class="form-label small fw-bold">Update Verification Status</label>
+                        <select name="status" id="status" class="form-select mb-3">
+                            <option value="pending" {% if item.status == 'pending' %}selected{% endif %}>Pending Verification</option>
+                            <option value="approved" {% if item.status == 'approved' %}selected{% endif %}>Approved / Verified</option>
+                            <option value="rejected" {% if item.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                            <option value="blacklisted" {% if item.status == 'blacklisted' %}selected{% endif %}>Blacklisted</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary w-100 mb-2">Apply Changes</button>
+                    </form>
+                    <p class="text-muted small text-center mt-2">
+                        Updating status affects the company's ability to post job drives.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
